@@ -6,7 +6,7 @@ from langchain_qdrant import QdrantVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from qdrant_client.models import Distance, VectorParams
 
-from core.config import get_embeddings, get_qdrant_client, get_settings
+from app.core.config import get_embeddings, get_qdrant_client, get_settings
 
 
 def load(path: Path) -> list[Document]:
@@ -64,3 +64,7 @@ def ingest(path: str | None = None) -> int:
         client.close()
 
     return len(chunks)
+
+
+if __name__ == "__main__":
+    print(ingest(), "chunks indexed")
