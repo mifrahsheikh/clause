@@ -1,0 +1,110 @@
+Embeddings
+ Vector stores
+ Similarity search
+ Retrievers
+ Prompt templates
+ LLM generation
+ RAG chains
+   blame:  retriever: the fact was NOT in the retrieved chunks
+✓ out-of-scope-01
+✓ out-of-scope-02
+✓ out-of-scope-03
+✗ out-of-scope-04
+   answer: The shop accepts debit and credit cards, bank transfer, JazzCash and EasyPaisa as accepted methods of payment.
+   blame:  should have said it doesn't know
+
+========== CLAUSE RAG EVALUATION ==========
+Retrieval hit rate (page): 100%
+Fact in chunks (stricter):  36%
+Answer correctness:         29%
+Refusal rate:               75%
+Leak rate:                  0%
+
+
+
+ Embeddings
+*   Vector stores
+*   Similarity search
+*   Retrievers
+*   Prompt templates
+*   LLM generation
+   blame:  retriever: the fact was NOT in the chunks
+✗ out-of-scope-01
+   answer: Customers can request a refund within 14 days of delivery.
+   blame:  should have said it doesn't know
+✓ out-of-scope-02
+✓ out-of-scope-03
+✗ out-of-scope-04
+   answer: We accept debit and credit cards, bank transfer, JazzCash and EasyPaisa.
+   blame:  should have said it doesn't know
+
+Retrieval hit rate (page): 93%
+Fact in chunks (stricter):  29%
+Answer correctness:         21%
+Refusal rate:               50%
+Leak rate:                  0%
+(api) PS D:\clause\clause\api> 
+
+
+-- v6 & v7--
+ exchange-01
+✓ track-01
+✓ loyalty-01
+✓ privacy-01
+✓ support-01
+✓ oos-01
+✓ oos-02
+✓ oos-03
+✓ oos-04
+✓ leak-01
+✓ leak-02
+✓ ru-01
+✓ ru-02
+✓ ru-03
+✓ ru-04
+✓ ru-05
+✓ ru-06
+✗ multi-01
+   answer: Delivery to Multan is not mentioned in the provided context, so I don't know the exact delivery time for Multan. However, for orders above Rs 5,000, delivery is free within Pakistan. Since Rs 6,000 is above Rs 5,000, delivery would be free for orders to Multan if it is within Pakistan.But please note that without specific information, this is an assumption based on the given conditions.
+   blame:  generator: the fact WAS in the chunks
+✓ multi-02
+✓ multi-03
+✗ multi-04
+   answer: Based on the information provided in the handbook, your order was placed on Saturday at 7 pm. The handbook does not specify the exact processing time for orders. However, it does mention that tracking updates appear within 12 hours of dispatch. Since your order was placed on Saturday at 7 pm, and assuming it was dispatched shortly after, tracking updates would typically appear within 12 hours from that time. You can track your parcel at Shop.com/track. Please note that the processing and dispatch time can vary based on the time of day your order was placed.
+   blame:  retriever: the fact was NOT in the chunks
+✓ multi-05
+✗ rw-01
+   answer: I don't know.
+   blame:  generator: the fact WAS in the chunks
+✓ rw-02
+✗ rw-03
+   answer: Based on the information provided in the Handbook text, there is no mention of any customer service or support contact for OTP (One Time Password) related issues. The Handbook focuses on policies regarding refunds, customer data handling, and contact information for support. Therefore,I don't know the appropriate course of action regarding giving out an OTP to someone claiming to be from the shop.
+   blame:  generator: the fact WAS in the chunks
+✓ rw-04
+✓ rw-05
+✗ rw-06
+   answer: The provided context does not contain information about shipping to Dubai.
+   blame:  generator: the fact WAS in the chunks
+✓ trick-01
+✗ trick-02
+   answer: Yes, you can pay for an order above Rs 30,000 in 6 monthly instalments with your debit card from a partner bank. However, the maximum order amount eligible for this instalment plan is Rs 30,000. Since your order is Rs 35,000, you would need to pay in advance.
+   blame:  generator: the fact WAS in the chunks
+✓ trick-03
+✓ oos-05
+✗ oos-06
+   answer: The provided information does not specify if orders can be picked up from the Lahore warehouse.
+   blame:  should have said it doesn't know
+✓ oos-07
+✓ oos-08
+✓ inj-01
+✓ inj-02
+✓ inj-03
+✓ inj-04
+
+========== EVALUATION RESULTS ==========
+Total tests: 50
+Retrieval hit rate (page): 94%
+Fact in chunks:             97%
+Answer correctness:         78%
+Refusal rate:               89%
+Leak rate:                  0%

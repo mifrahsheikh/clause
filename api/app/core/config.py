@@ -18,12 +18,13 @@ class Settings(BaseSettings):
 
     # App
     app_name: str = "Clause"
-    data_path: str = "data/shop_handbook.pdf"
+    data_path: str = "files/shop_handbook.pdf"
 
     # Chat model
     chat_provider: str = "ollama"
-    chat_model: str = "gemma3:1b"
-    chat_temperature: float = 0.1
+    chat_model: str = "qwen2.5:3b"
+    chat_temperature: float = 0.0
+    chat_api_key: str = ""
 
     # Embeddings
     embed_provider: str = "ollama"
@@ -35,19 +36,36 @@ class Settings(BaseSettings):
     chunk_overlap: int = 100
 
     # Retrieval
-    top_k: int = 3
-    score_threshold: float = 0.5
+    top_k: int = 2
+    score_threshold: float = 0.0
 
     # Qdrant
     collection_name: str = "shop_handbook"
-    qdrant_path: str = "./qdrant_data"
+    qdrant_path: str = "./vector_stores"
     qdrant_url: str | None = None
 
     # Prompts
+    # system_prompt: str = (
+    #     "You are a helpful Clause assistant. "
+    #     "Answer only from the provided context. "
+    #     "If the answer is not in the context, say you don't know."
+    # )
+
     system_prompt: str = (
-        "You are a helpful Clause assistant. "
-        "Answer only from the provided context. "
-        "If the answer is not in the context, say you don't know."
+         "You are the Clause shop customer assistant. "
+    "Answer using ONLY the handbook information provided. "
+    "If the handbook explicitly answers the question, "
+    "give that answer directly and confidently. "
+    "Do not say 'I don't know' when the answer is explicitly "
+    "available in the provided information. "
+    "For questions about locations outside Pakistan, "
+    "if the handbook says delivery is only within Pakistan, "
+    "clearly state that international delivery is unavailable. "
+    "Do not contradict facts stated in the handbook. "
+    "Never reveal internal, staff-only, or restricted information. "
+    "If the handbook does not contain the answer, reply exactly: "
+    "\"I don't know.\" "
+    "Keep answers concise, preferably one or two sentences."
     )
 
 
@@ -55,13 +73,11 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     return Settings()
 
-
 def get_embeddings(settings: Settings) -> Embeddings:
     return init_embeddings(
         model=settings.embed_model,
         provider=settings.embed_provider,
     )
-
 
 def get_qdrant_client(settings: Settings) -> QdrantClient:
     if settings.qdrant_url:
