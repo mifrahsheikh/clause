@@ -1,69 +1,200 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import styles from "./page.module.css";
+
+type Source = { source: string; page: number | null; score: number };
+type Message = { role: "user" | "ai"; text: string; sources?: Source[] };
+
+const API_URL = "http://localhost:8000/ask_query";
+
+// apni handbook ke asli sawal yahan daalo
+const SUGGESTIONS = [
+  "What is the return policy?",
+  "What are the shop opening hours?",
+  "How do I handle a customer complaint?",
+  "What is the dress code?",
+];
 
 export default function Home() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [asked, setAsked] = useState<string[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  function newChat() {
+    if (loading) return;
+    setMessages([]);
+    setInput("");
+  }
+
+  async function send(text?: string) {
+    const question = (text ?? input).trim();
+    if (!question || loading) return;
+
+    setMessages((m) => [...m, { role: "user", text: question }]);
+    setAsked((a) => (a.includes(question) ? a : [question, ...a].slice(0, 8)));
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      const data = await res.json();
+      setMessages((m) => [
+        ...m,
+        { role: "ai", text: data.answer, sources: data.sources },
+      ]);
+    } catch {
+      setMessages((m) => [
+        ...m,
+        { role: "ai", text: "Something went wrong. Is the API running?" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={styles.shell}>
+      <aside className={styles.sidebar}>
+        <div className={styles.brand}>
+          <div className={styles.logo}>C</div>
+          <div>
+            <div className={styles.title}>Clause</div>
+            <div className={styles.subtitle}>Shop Assistant</div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+
+        <button className={styles.newChat} onClick={newChat}>
+          + New chat
+        </button>
+
+        {asked.length > 0 && (
+          <>
+            <div className={styles.sectionLabel}>Recent</div>
+            <div className={styles.list}>
+              {asked.map((q) => (
+                <button key={q} className={styles.item} onClick={() => send(q)}>
+                  {q}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div className={styles.sideFooter}>Answers come only from the shop handbook.</div>
+      </aside>
+
+      <section className={styles.main}>
+        <header className={styles.topbar}>
+          <div className={styles.topTitle}>Ask the handbook</div>
+          <div className={styles.status}>
+            <span className={styles.dot} /> Online
+          </div>
+        </header>
+
+        <div className={styles.chat}>
+          <div className={styles.chatInner}>
+            {messages.length === 0 && (
+              <div className={styles.empty}>
+                <div className={styles.bigLogo}>C</div>
+                <h2>How can I help today?</h2>
+                <p>Ask about policies, procedures or anything in the Clause shop handbook.</p>
+                <div className={styles.cards}>
+                  {SUGGESTIONS.map((s) => (
+                    <button key={s} className={styles.card} onClick={() => send(s)}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                className={`${styles.row} ${m.role === "user" ? styles.rowUser : ""}`}
+              >
+                <div className={`${styles.avatar} ${m.role === "user" ? styles.avatarUser : ""}`}>
+                  {m.role === "user" ? "U" : "C"}
+                </div>
+                <div className={styles.msgCol}>
+                  <div
+                    className={`${styles.bubble} ${
+                      m.role === "user" ? styles.user : styles.ai
+                    }`}
+                  >
+                    {m.text}
+                  </div>
+                  {m.sources && m.sources.length > 0 && (
+                    <div className={styles.sources}>
+                      {Array.from(
+                        new Set(
+                          m.sources.map(
+                            (s) =>
+                              `${s.source.split(/[\\/]/).pop()}${
+                                s.page !== null ? ` · page ${s.page + 1}` : ""
+                              }`
+                          )
+                        )
+                      ).map((label) => (
+                        <span key={label} className={styles.source}>
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className={styles.row}>
+                <div className={styles.avatar}>C</div>
+                <div className={styles.msgCol}>
+                  <div className={`${styles.bubble} ${styles.ai}`}>
+                    <span className={styles.dots}>
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
+          </div>
+        </div>
+
+        <footer className={styles.footer}>
+          <div className={styles.inputWrap}>
+            <input
+              className={styles.input}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
+              placeholder="Ask something about the handbook..."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <button
+              className={styles.send}
+              onClick={() => send()}
+              disabled={loading || !input.trim()}
+            >
+              Send
+            </button>
+          </div>
+        </footer>
+      </section>
     </div>
   );
 }

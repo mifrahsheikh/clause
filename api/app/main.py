@@ -1,11 +1,9 @@
 from contextlib import asynccontextmanager
 from typing import Annotated
-
 from fastapi import FastAPI, Request
 from pydantic import BaseModel, StringConstraints
 
 from app.services.chat import RAGService, Answer
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,6 +26,3 @@ def health():
 def ask_query(body: AskQuestion, req: Request):
     return req.app.state.rag.ask(body.question)
 
-
-# cd api
-# uv run fastapi dev app/main.py

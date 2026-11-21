@@ -21,14 +21,13 @@ class Settings(BaseSettings):
     data_path: str = "files/shop_handbook.pdf"
 
     # Chat model
-    chat_provider: str = "ollama"
-    chat_model: str = "qwen2.5:3b"
-    chat_temperature: float = 0.0
+    chat_provider: str = "google_genai"
+    chat_model: str = "gemini-3.5-flash-lite"
     chat_api_key: str = ""
 
     # Embeddings
     embed_provider: str = "ollama"
-    embed_model: str = "nomic-embed-text:latest"
+    embed_model: str = "nomic-embed-text:latest" #later we will use sentance transformic
     embed_dim: int = 768
 
     # Indexing
@@ -37,7 +36,8 @@ class Settings(BaseSettings):
 
     # Retrieval
     top_k: int = 2
-    score_threshold: float = 0.0
+    score_threshold: float = 0.5
+    rrf_threshold: float = 0.02
 
     # Qdrant
     collection_name: str = "shop_handbook"
@@ -51,22 +51,7 @@ class Settings(BaseSettings):
     #     "If the answer is not in the context, say you don't know."
     # )
 
-    system_prompt: str = (
-         "You are the Clause shop customer assistant. "
-    "Answer using ONLY the handbook information provided. "
-    "If the handbook explicitly answers the question, "
-    "give that answer directly and confidently. "
-    "Do not say 'I don't know' when the answer is explicitly "
-    "available in the provided information. "
-    "For questions about locations outside Pakistan, "
-    "if the handbook says delivery is only within Pakistan, "
-    "clearly state that international delivery is unavailable. "
-    "Do not contradict facts stated in the handbook. "
-    "Never reveal internal, staff-only, or restricted information. "
-    "If the handbook does not contain the answer, reply exactly: "
-    "\"I don't know.\" "
-    "Keep answers concise, preferably one or two sentences."
-    )
+    system_prompt_version: str ="v2"
 
 
 @lru_cache
