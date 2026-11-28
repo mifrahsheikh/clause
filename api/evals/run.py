@@ -1,8 +1,9 @@
-from pathlib import Path
-from app.services.agent import ClauseAgent
-from datetime import datetime
 import json
 import time
+from datetime import datetime
+from pathlib import Path
+
+from app.services.agent import ClauseAgent
 
 EVALS_DIR = Path(__file__).resolve().parent
 GOLDEN_FILE = EVALS_DIR / "golden.jsonl"

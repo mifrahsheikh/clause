@@ -1,14 +1,15 @@
-from langchain.agents.middleware import(
+from langchain.agents.middleware import (
     AgentMiddleware,
     ModelCallLimitMiddleware,
     ModelFallbackMiddleware,
+    SummarizationMiddleware,
     ToolCallLimitMiddleware,
-    SummarizationMiddleware
 )
 
 from app.core.config import Settings
 from app.llm.models import get_chat_model, get_fallback_model
 from app.middleware.observability import LoggingMiddleware
+
 
 def default_stack(settings: Settings) -> list[AgentMiddleware]:
     stack= [
@@ -24,5 +25,4 @@ def default_stack(settings: Settings) -> list[AgentMiddleware]:
     fallback = get_fallback_model(settings)
     if fallback:
         stack.append(ModelFallbackMiddleware())
-        pass
     return stack

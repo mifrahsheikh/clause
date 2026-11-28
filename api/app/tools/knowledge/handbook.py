@@ -1,7 +1,8 @@
 from langchain.tools import tool
 from langchain_qdrant import QdrantVectorStore
-from pydantic import BaseModel
+
 from app.schemas.retrieval import Source
+
 
 def file_search(store: QdrantVectorStore, top_k: int):
 

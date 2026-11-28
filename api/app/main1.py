@@ -1,9 +1,8 @@
+from langchain.chat_models import init_chat_model  # LLM
+from langchain.embeddings import init_embeddings  # Embedding Model
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.vectorstores import InMemoryVectorStore  # Vector Database
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.embeddings import init_embeddings # Embedding Model
-from langchain_core.vectorstores import InMemoryVectorStore # Vector Database
-from langchain.chat_models import init_chat_model # LLM
-
 
 DATA_PATH = "data/shop_handbook.pdf"
 

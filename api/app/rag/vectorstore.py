@@ -1,9 +1,6 @@
-from langchain.chat_models import init_chat_model
-from langchain_qdrant import QdrantVectorStore, RetrievalMode, FastEmbedSparse
-from pydantic import BaseModel
-from app.prompts.loaders import get_prompt
+from langchain_qdrant import FastEmbedSparse, QdrantVectorStore, RetrievalMode
 
-from app.core.config import Settings, get_qdrant_client, get_embeddings
+from app.core.config import Settings, get_embeddings, get_qdrant_client
 
 
 def get_vector_store(settings: Settings) -> QdrantVectorStore:

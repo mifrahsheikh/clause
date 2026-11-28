@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, Request
 from pydantic import BaseModel, StringConstraints
 
-from app.services.chat import ChatService, Answer
+from app.services.chat import Answer, ChatService
 
 
 @asynccontextmanager

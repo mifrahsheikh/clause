@@ -1,10 +1,11 @@
-from langchain.chat_models import init_chat_model #llm
-from langchain.embeddings import init_embeddings #embedding
-# from langchain_community.document_loaders import TextLoader #py pdf loader
-from langchain_core.documents import Document #.txt , .md
-from langchain_text_splitters import RecursiveCharacterTextSplitter #chunks
-from langchain_core.vectorstores import InMemoryVectorStore #vs
 from pathlib import Path
+
+from langchain.embeddings import init_embeddings  #embedding
+
+# from langchain_community.document_loaders import TextLoader #py pdf loader
+from langchain_core.documents import Document  #.txt , .md
+from langchain_core.vectorstores import InMemoryVectorStore  #vs
+from langchain_text_splitters import RecursiveCharacterTextSplitter  #chunks
 
 #indexing
 # 1. Loading the document

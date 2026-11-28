@@ -4,16 +4,14 @@ from uuid import uuid4
 
 from langchain.agents import create_agent
 from langchain.messages import HumanMessage
-from langchain.tools import tool
+from langgraph.checkpoint.sqlite import SqliteSaver
 
 from app.core.config import get_settings
-from app.rag.vectorstore import get_vector_store
-from app.prompts.loaders import get_prompt
 from app.llm.models import get_chat_model
-from app.tools.knowledge.handbook import file_search
-
-from langgraph.checkpoint.sqlite import SqliteSaver
 from app.middleware.stack import default_stack
+from app.prompts.loaders import get_prompt
+from app.rag.vectorstore import get_vector_store
+from app.tools.knowledge.handbook import file_search
 
 # SQLite conversation memory
 conn = sqlite3.connect(

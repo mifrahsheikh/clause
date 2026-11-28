@@ -1,8 +1,8 @@
 
 from langchain.chat_models import init_chat_model
-from app.core.config import Settings
-
 from langchain_core.language_models import BaseChatModel
+
+from app.core.config import Settings
 
 
 def get_chat_model(settings:Settings) -> BaseChatModel:

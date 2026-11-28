@@ -1,4 +1,4 @@
-from app.core.config import get_settings, get_qdrant_client
+from app.core.config import get_qdrant_client, get_settings
 
 settings = get_settings()
 client = get_qdrant_client(settings)

@@ -1,4 +1,3 @@
-import re
 INTERNAL_SECTION = ""
 
 def internal_section(text: str) -> None:

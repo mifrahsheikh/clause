@@ -6,7 +6,6 @@ from langchain_core.embeddings import Embeddings
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from qdrant_client import QdrantClient
 
-
 # api/.env
 ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 

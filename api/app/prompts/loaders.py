@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 PROMPTS_DIR = Path(__file__).parent  #api/app/prompts
 
 def get_prompt(name: str, version: str ="v1") -> None:
