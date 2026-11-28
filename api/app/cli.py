@@ -9,8 +9,6 @@ def main() -> None:
 
     try:
 
-        
-
         choice = input(
             "Enter 1 for a new conversation "
             "or 2 to continue an existing conversation: "

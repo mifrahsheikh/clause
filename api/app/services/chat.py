@@ -15,7 +15,7 @@
 #     answer: str
 #     sources: list[Source]
 
-# class RAGService():
+# class ChatService():
 #     def __init__(self) -> None:
 #         self.settings = get_settings()
 #         self.system_prompt = get_prompt(

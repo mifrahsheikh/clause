@@ -13,7 +13,7 @@ from app.llm.models import get_chat_model
 from app.tools.knowledge.handbook import file_search
 
 from langgraph.checkpoint.sqlite import SqliteSaver
-
+from app.middleware.stack import default_stack
 
 # SQLite conversation memory
 conn = sqlite3.connect(
@@ -83,6 +83,7 @@ class ClauseAgent:
                 name="support/system",
                 version=self.settings.system_prompt_version
             ),
+            middleware=default_stack(settings=self.settings),
             checkpointer=checkpointer,
         )
 

@@ -51,7 +51,15 @@ class Settings(BaseSettings):
     #     "If the answer is not in the context, say you don't know."
     # )
 
-    system_prompt_version: str ="v2"
+    system_prompt_version: str ="v1"
+
+# agent limit for questions
+    max_model_call: int= 5
+    max_tool_call: int= 3
+    # memory: summarize th eold messages when conversation get long
+    
+    summary_trigger_tokens: int=3000
+    summary_keep_messages: int=10
 
 
 @lru_cache

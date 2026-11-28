@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import re
 # from pypdf import PdfReader
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
@@ -8,6 +8,8 @@ from langchain_qdrant import QdrantVectorStore, RetrievalMode, FastEmbedSparse
 from qdrant_client.models import Distance, VectorParams, SparseVectorParams
 import re
 from app.core.config import get_embeddings, get_qdrant_client, get_settings
+
+from app.rag.cleaning import internal_section
 
 STAFF_MARKER = re.compile(
     r"INTERNAL\s+STAFF\s+INFORMATION|STAFF\s+ONLY",
