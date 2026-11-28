@@ -19,10 +19,7 @@ def file_search(store: QdrantVectorStore, top_k: int):
             Relevant handbook text and source information.
         """
 
-        results = store.similarity_search_with_score(
-            query=query,
-            k=top_k
-        )
+        results = store.similarity_search_with_score(query=query, k=top_k)
 
         if not results:
             return "Nothing Found", []
@@ -31,22 +28,22 @@ def file_search(store: QdrantVectorStore, top_k: int):
         sources = []
 
         for doc, score in results:
-
             texts.append(doc.page_content)
 
-            sources.append({
-                "page": doc.metadata.get("page"),
-                "score": round(float(score), 4),
-            })
+            sources.append(
+                {
+                    "page": doc.metadata.get("page"),
+                    "score": round(float(score), 4),
+                }
+            )
 
         text = "\n\n".join(texts)
         sources = [
             Source(
                 source=doc.metadata.get("source", "unknown"),
                 page=doc.metadata.get("page"),
-                score=round(score, 4)
+                score=round(score, 4),
             )
-
             for doc, score in results
         ]
 

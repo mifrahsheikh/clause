@@ -3,7 +3,6 @@ from app.services.agent import ClauseAgent
 # from app.services.chat import RAGService
 
 
-
 def main() -> None:
     clause_agent = ClauseAgent()
 
@@ -25,6 +24,7 @@ def main() -> None:
 
     finally:
         clause_agent.close()
+
 
 if __name__ == "__main__":
     main()

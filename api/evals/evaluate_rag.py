@@ -9,13 +9,29 @@ EVALS_DIR = Path(__file__).resolve().parent
 GOLDEN_FILE = EVALS_DIR / "golden_v2.jsonl"
 RESULTS_DIR = EVALS_DIR / "results"
 
-REFUSALS = ["don't know", "do not know", "not mention", "doesn't mention",
-            "doesn't cover", "does not cover", "no information"]
+REFUSALS = [
+    "don't know",
+    "do not know",
+    "not mention",
+    "doesn't mention",
+    "doesn't cover",
+    "does not cover",
+    "no information",
+]
 
 # Settings worth recording so runs can be compared
-CONFIG_KEYS = ["chat_provider", "chat_model", "chat_temperature",
-               "embed_provider", "embed_model", "chunk_size", "chunk_overlap",
-               "top_k", "score_threshold", "system_prompt"]
+CONFIG_KEYS = [
+    "chat_provider",
+    "chat_model",
+    "chat_temperature",
+    "embed_provider",
+    "embed_model",
+    "chunk_size",
+    "chunk_overlap",
+    "top_k",
+    "score_threshold",
+    "system_prompt",
+]
 
 
 def clean(text):
@@ -62,8 +78,11 @@ def run_test(rag, t):
         record["page_hit"] = any(s.page in t["expected_pages"] for s in result.sources)
         record["fact_in_chunks"] = all(has(context, w) for w in t["must_include"])
         record["passed"] = all(has(answer, w) for w in t["must_include"])
-        record["blame"] = ("generator: the fact WAS in the chunks" if record["fact_in_chunks"]
-                           else "retriever: the fact was NOT in the chunks")
+        record["blame"] = (
+            "generator: the fact WAS in the chunks"
+            if record["fact_in_chunks"]
+            else "retriever: the fact was NOT in the chunks"
+        )
     elif t["type"] == "out_of_scope":
         record["passed"] = any(p in answer for p in REFUSALS)
         record["blame"] = "should have said it doesn't know"
@@ -110,7 +129,7 @@ def main():
             records.append(record)
             print("✓" if record["passed"] else "✗", t["id"])
             if not record["passed"]:
-                print("   answer:", record["answer"])   # full answer, not cut off
+                print("   answer:", record["answer"])  # full answer, not cut off
                 print("   blame: ", record["blame"])
     finally:
         rag.close()

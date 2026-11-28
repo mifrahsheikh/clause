@@ -14,16 +14,12 @@ from app.rag.vectorstore import get_vector_store
 from app.tools.knowledge.handbook import file_search
 
 # SQLite conversation memory
-conn = sqlite3.connect(
-    database="memory.db",
-    check_same_thread=False
-)
+conn = sqlite3.connect(database="memory.db", check_same_thread=False)
 
 checkpointer = SqliteSaver(conn)
 
 
 class ClauseAgent:
-
     def __init__(self) -> None:
 
         self.settings = get_settings()
@@ -74,39 +70,24 @@ class ClauseAgent:
         # Create agent
         self.agent = create_agent(
             model=get_chat_model(settings=self.settings),
-            tools=[
-                file_search(store=self.store, top_k=self.settings.top_k)
-                ],
+            tools=[file_search(store=self.store, top_k=self.settings.top_k)],
             system_prompt=get_prompt(
-                name="support/system",
-                version=self.settings.system_prompt_version
+                name="support/system", version=self.settings.system_prompt_version
             ),
             middleware=default_stack(settings=self.settings),
             checkpointer=checkpointer,
         )
 
     # Ask question
-    def ask(
-        self,
-        question: str,
-        thread_id: str | None = None
-    ) -> Any:
+    def ask(self, question: str, thread_id: str | None = None) -> Any:
 
         # Use supplied conversation ID or default ID
         if thread_id is None:
             thread_id = self.thread_id
 
         result = self.agent.invoke(
-            {
-                "messages": [
-                    HumanMessage(content=question)
-                ]
-            },
-            config={
-                "configurable": {
-                    "thread_id": thread_id
-                }
-            },
+            {"messages": [HumanMessage(content=question)]},
+            config={"configurable": {"thread_id": thread_id}},
         )
 
         response = result["messages"][-1].content

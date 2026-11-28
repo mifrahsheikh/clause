@@ -8,10 +8,8 @@ def main() -> None:
     clause_agent = ClauseAgent()
 
     try:
-
         choice = input(
-            "Enter 1 for a new conversation "
-            "or 2 to continue an existing conversation: "
+            "Enter 1 for a new conversation or 2 to continue an existing conversation: "
         ).strip()
 
         if choice not in {"1", "2"}:
@@ -19,17 +17,13 @@ def main() -> None:
             return
 
         if choice == "2":
-
-            thread_id = input(
-                "Enter conversation ID: "
-            ).strip()
+            thread_id = input("Enter conversation ID: ").strip()
 
             if not thread_id:
                 print("Invalid conversation ID.")
                 return
 
         else:
-
             thread_id = str(uuid4())
 
             print("\nNew conversation created.")
@@ -38,7 +32,6 @@ def main() -> None:
         print("\nType 'exit' to end the conversation.\n")
 
         while True:
-
             query = input("You: ").strip()
 
             if not query:
@@ -60,14 +53,11 @@ def main() -> None:
             print(f"\nAI: {result}")
 
             # Display sources when available
-        
 
     except (KeyboardInterrupt, EOFError):
-
         print("\nConversation ended.")
 
     finally:
-
         clause_agent.close()
 
 

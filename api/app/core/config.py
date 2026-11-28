@@ -26,7 +26,9 @@ class Settings(BaseSettings):
 
     # Embeddings
     embed_provider: str = "ollama"
-    embed_model: str = "nomic-embed-text:latest" #later we will use sentance transformic
+    embed_model: str = (
+        "nomic-embed-text:latest"  # later we will use sentance transformic
+    )
     embed_dim: int = 768
 
     # Indexing
@@ -50,26 +52,28 @@ class Settings(BaseSettings):
     #     "If the answer is not in the context, say you don't know."
     # )
 
-    system_prompt_version: str ="v1"
+    system_prompt_version: str = "v1"
 
-# agent limit for questions
-    max_model_call: int= 5
-    max_tool_call: int= 3
+    # agent limit for questions
+    max_model_call: int = 5
+    max_tool_call: int = 3
     # memory: summarize th eold messages when conversation get long
-    
-    summary_trigger_tokens: int=3000
-    summary_keep_messages: int=10
+
+    summary_trigger_tokens: int = 3000
+    summary_keep_messages: int = 10
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
 
+
 def get_embeddings(settings: Settings) -> Embeddings:
     return init_embeddings(
         model=settings.embed_model,
         provider=settings.embed_provider,
     )
+
 
 def get_qdrant_client(settings: Settings) -> QdrantClient:
     if settings.qdrant_url:

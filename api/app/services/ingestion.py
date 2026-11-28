@@ -23,6 +23,7 @@ FORBIDDEN_PHRASES = [
     "orders above rs 50,000",
 ]
 
+
 def load(path: Path) -> list[Document]:
     docs = PyPDFLoader(str(path)).load()
 
@@ -33,7 +34,6 @@ def load(path: Path) -> list[Document]:
         safe_lines = []
 
         for line in doc.page_content.splitlines():
-
             # Detect the beginning of restricted information.
             if STAFF_MARKER.search(line):
                 inside_staff_section = True
@@ -51,9 +51,7 @@ def load(path: Path) -> list[Document]:
         )
 
     # Verify that restricted information was removed.
-    complete_text = "\n".join(
-        doc.page_content for doc in filtered_docs
-    ).lower()
+    complete_text = "\n".join(doc.page_content for doc in filtered_docs).lower()
 
     for phrase in FORBIDDEN_PHRASES:
         if phrase in complete_text:
@@ -62,6 +60,7 @@ def load(path: Path) -> list[Document]:
             )
 
     return filtered_docs
+
 
 def ingest(path: str | None = None) -> int:
     settings = get_settings()
@@ -99,8 +98,10 @@ def ingest(path: str | None = None) -> int:
 
         client.create_collection(
             collection_name=settings.collection_name,
-            vectors_config={"dense": VectorParams(size=settings.embed_dim, distance=Distance.COSINE)},
-            sparse_vectors_config={"sparse": SparseVectorParams()}
+            vectors_config={
+                "dense": VectorParams(size=settings.embed_dim, distance=Distance.COSINE)
+            },
+            sparse_vectors_config={"sparse": SparseVectorParams()},
         )
 
         vector_store = QdrantVectorStore(
@@ -110,7 +111,7 @@ def ingest(path: str | None = None) -> int:
             sparse_embedding=FastEmbedSparse(model_name="Qdrant/bm25"),
             retrieval_mode=RetrievalMode.HYBRID,
             vector_name="dense",
-            sparse_vector_name="sparse"
+            sparse_vector_name="sparse",
         )
         vector_store.add_documents(chunks)
     finally:
